@@ -1,14 +1,14 @@
 {
-  "name": "Home-Automation",
-  "description": "Uses Full-Stack JavaScript with MongoDB, Express, AngularJS, and Node.js to as a interface to a home automation system",
+  "name": "CILF-Database",
+  "description": "Uses Full-Stack JavaScript with MongoDB, MySQL, Express, AngularJS, and Node.js",
   "version": "1.0.0",
   "meanjs-version": "0.4.2",
   "private": false,
-  "author": "https://github.com/meanjs/mean/graphs/contributors && tloftis",
+  "author": "https://github.com/meanjs/mean/graphs/contributors",
   "license": "None",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tloftis/node-relay-control.git"
+    "url": ""
   },
   "engines": {
     "node": ">=4.0.0",

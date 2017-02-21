@@ -1,7 +1,7 @@
 ﻿'use strict';
 
 // Users directive used to force lowercase input
-angular.module('pokemon').directive('lowercase', function () {
+angular.module('project').directive('lowercase', function () {
     return {
         require: 'ngModel',
         link: function (scope, element, attrs, modelCtrl) {

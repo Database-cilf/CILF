@@ -18,6 +18,7 @@ var connection = mysql.createConnection({
 	database: 'cilf'
 });
 
+/* Working code that updates based on an object, not used, but exists
 var createSql = (queryObj, table, id)=>{
 	var sql = Object.keys(queryObj).reduce((last, current)=>{
 		last += current + '="' + queryObj[current]+'",';
@@ -28,7 +29,7 @@ var createSql = (queryObj, table, id)=>{
 	sql += ' WHERE id=' + +id + ';';
 	return sql;
 }
-
+*/
 connection.connect((err)=>{
 	if(err){
 		console.log(err);
@@ -37,16 +38,10 @@ connection.connect((err)=>{
 });
 
 /**
- * Show the current player
+ * Show the current project
  */
 exports.get= function (req, res) {
-	connection.query('SELECT U.firstName, U.lastName FROM USER U, PROJECT P, MEMBER M WHERE P.id = M.proj_id AND U.id = M.user_id AND P.name = "SUPER COOL PROJECT";', (err, r, f)=>{
-		console.log(r[0]);
-		console.log(r[1]);
-		console.log(Object.keys(r[1]));
-		connection.exit();
-	});	
-    res.json(req.player);
+    res.json(req.project);
 };
 
 /**
@@ -147,7 +142,18 @@ exports.delete = function (req, res) {
  * List of Players
  */
 exports.list = function (req, res) {
-	connection.query('SELECT * FROM PROJECT', (err, r)=>{
+	connection.query('\
+			SELECT \
+				P.name as name, P.id as id, P.description as description, PR.avgRating as rating, U.firstname as firstname, U.lastname as lastname \
+			FROM \
+				PROJECT P, \
+				(SELECT P.name, (SUM(R.rate)/COUNT(R.rate)) as avgRating, P.id as id FROM PROJECT P, RATING R \
+					WHERE P.id = R.proj_id \
+					GROUP BY P.id) PR, \
+				USER U \
+			WHERE \
+				P.id = PR.id AND U.id = P.owner_id', (err, r)=>{
+		r = r.forEach((p)=>{ p.owner={firstName: p.firstname, lastName: p.lastname}; return p});
         res.json(r);
 	});
 };
@@ -156,7 +162,18 @@ exports.list = function (req, res) {
  * Player middleware
  */
 exports.projectByID = function (req, res, next, id) {
-	connection.query('SELECT * FROM PROJECT WHERE id=' + +id, (err, r)=>{
+	connection.query('\
+			SELECT \
+				P.name as name, P.id as id, P.description as description, PR.avgRating as rating, U.firstname as firstname, U.lastname as lastname \
+			FROM \
+				PROJECT P, \
+				(SELECT P.name, (SUM(R.rate)/COUNT(R.rate)) as avgRating, P.id as id FROM PROJECT P, RATING R \
+					WHERE P.id = R.proj_id \
+					GROUP BY P.id) PR, \
+				USER U \
+			WHERE \
+				P.id = PR.id AND U.id = P.owner_id AND P.id=' + +id, (err, r)=>{
+					
 		var project = r[0];
 		
         if (err) {
@@ -164,7 +181,8 @@ exports.projectByID = function (req, res, next, id) {
         } else if (!project) {
             return next(new Error('Failed to load Project ' + +id));
         }
-
+		
+		project.owner={firstName: project.firstname, lastName: project.lastname};
         req.project = project;
         next();
 	});

@@ -1,34 +1,30 @@
 'use strict';
 
-angular.module('pokemon').service('pokemonPlayerService', ['Utility',
+angular.module('project').service('projectService', ['Utility',
     function (Utility) {
         var service = {};
 
-        service.getPlayers = function (){
-            return Utility.http.get('pokemon/players');
+        service.getProjects = function (){
+            return Utility.http.get('projects');
         };
 
-        service.createPlayer = function(player){
-            return Utility.http.post('pokemon/players', player);
+        service.createProject = function(project){
+            return Utility.http.post('projects', project);
         };
 
-        service.uploadPlayers = function(xmlData){
-            return Utility.http.put('pokemon/players', {xml:xmlData});
+        service.getProject = function(id){
+            id = (id || {})._id || id;
+            return Utility.http.get('projects/' + id);
         };
 
-        service.getPlayer = function(pokemonId){
-            pokemonId = (pokemonId || {})._id || pokemonId;
-            return Utility.http.get('pokemon/players/' + pokemonId);
+        service.updateProject = function(id, project){
+            id = (id || {}).id || id;
+            return Utility.http.put('projects/' + id, project);
         };
 
-        service.updatePlayer = function(pokemonId, player){
-            pokemonId = (pokemonId || {})._id || pokemonId;
-            return Utility.http.put('pokemon/players/' + pokemonId, player);
-        };
-
-        service.removePlayer = function(pokemonId){
-            pokemonId = (pokemonId || {})._id || pokemonId;
-            return Utility.http.delete('pokemon/players/' + pokemonId);
+        service.removeProject = function(id){
+            id = (id || {})._id || id;
+            return Utility.http.delete('projects/' + id);
         };
 
         return service;

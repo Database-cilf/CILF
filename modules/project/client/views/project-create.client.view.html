@@ -5,64 +5,28 @@
                 <div class="ibox">
                     <div class="ibox-content">
                         <div class="form-group">
-                            <label>First Name</label>
+                            <label>Name</label>
 
-                            <input type="text" class="form-control" ng-model="player.firstName"
+                            <input type="text" class="form-control" ng-model="project.name"
                                    placeholder="First Name" required>
                         </div>
 
                         <div class="form-group">
-                            <label>Last Name</label>
+                            <label>Description</label>
 
-                            <input type="text" class="form-control" ng-model="player.lastName"
-                                   placeholder="Last Name" required>
+                            <input type="text" class="form-control" ng-model="project.description"
+                                   placeholder="Description" required>
+                        </div>
+						
+                        <div class="form-group">
+                            <label>Project Homepage</label>
+
+                            <input type="number" class="form-control" ng-model="project.projectUrl"
+                                   placeholder="http://www.example.com" required>
                         </div>
 
                         <div class="form-group">
-                            <label>Date of Birth</label>
-
-                            <div class="col-xs-12">
-                                <div class="col-xs-3">
-                                    <input type="number" class="form-control" ng-model="date.month"
-                                           placeholder="Month" required>
-                                </div>
-
-                                <div class="col-xs-1">
-                                    <span style="font-size: x-large;">/</span>
-                                </div>
-
-                                <div class="col-xs-3">
-                                    <input type="number" class="form-control" ng-model="date.day"
-                                           placeholder="Day" required>
-                                </div>
-
-                                <div class="col-xs-1">
-                                    <span style="font-size: x-large;">/</span>
-                                </div>
-
-                                <div class="col-xs-3">
-                                    <input type="number" class="form-control" ng-model="date.year"
-                                           placeholder="Year" required>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Pokemon ID</label>
-
-                            <input type="number" class="form-control" ng-model="player.pokeId"
-                                   placeholder="#######" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Email</label>
-
-                            <input type="text" class="form-control" ng-model="player.email"
-                                   placeholder="Name">
-                        </div>
-
-                        <div class="form-group">
-                            <div data-ng-click="createPlayer(player)" class="btn btn-primary">Create</div>
+                            <div data-ng-click="createProject(project)" class="btn btn-primary">Create</div>
                         </div>
                     </div>
                 </div>
