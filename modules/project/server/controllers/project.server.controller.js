@@ -9,13 +9,20 @@ var path = require('path'),
     errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
 	mysql = require('mysql');
 
-var connection = mysql.createConnection({
+var connection  = mysql.createPool({
+	connectionLimit : 10,
 	host: 'localhost',
 	user: 'root',
 	database: 'cilf'
 });
 
 /* Working code that updates based on an object, not used, but exists
+var connection = mysql.createConnection({
+	host: 'localhost',
+	user: 'root',
+	database: 'cilf'
+});
+  
 var createSql = (queryObj, table, id)=>{
 	var sql = Object.keys(queryObj).reduce((last, current)=>{
 		last += current + '="' + queryObj[current]+'",';
@@ -27,12 +34,8 @@ var createSql = (queryObj, table, id)=>{
 	return sql;
 }
 */
-connection.connect((err)=>{
-	if(err){
-		console.log(err);
-		process.exit()
-	}
-});
+
+
 
 /**
  * Show the current project
@@ -52,7 +55,7 @@ exports.create = function (req, res) {
 	VALUES ("' + project.name + '", "' + project.description + '", "' + project.projectUrl + '", ' + +project.owner_Id + ');';
 
     // Then save the player
-    connection.connect(sql, function (err, result) {
+    connection.query(sql, function (err, result) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
@@ -85,16 +88,21 @@ exports.update = function (req, res) {
     var newProject = req.body || {};
 	var queryObj = {};
 	
+	console.log(project, newProject);
+	
     //For security purposes only merge these parameters
 	var sql='UPDATE PROJECT SET \
 				name = "' + (newProject.name || project.name) + '",\
 				description = "' + (newProject.description || project.description) + '",\
-				projectUrl = "' + (newProject.projectUrl || project.projectUrl) + '",\
-				owner_id = ' + +(newProject.owner_id || project.owner_id) + ' \
+				projectUrl = "' + (newProject.projectUrl || project.projectUrl) + '"\
 			WHERE id=' + +project.id + ';'
     
-    connection.connect(sql, function (err, result) {
+	console.log(sql);
+	
+    connection.query(sql, function (err, result) {
         if (err) {
+			console.log(err);
+			
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
             });
@@ -141,7 +149,7 @@ exports.delete = function (req, res) {
 exports.list = function (req, res) {
 	var query = '\
 		SELECT \
-			P.name as name, P.id as id, P.description as description, IFNULL(avgRating, 0) as rating, U.firstname as firstname, U.lastname as lastname \
+			P.projectUrl as projectUrl, P.name as name, P.id as id, P.description as description, IFNULL(avgRating, 0) as rating, U.firstname as firstname, U.lastname as lastname \
 		FROM \
 			PROJECT P \
 			LEFT OUTER JOIN \
@@ -165,7 +173,7 @@ exports.list = function (req, res) {
 exports.projectByID = function (req, res, next, id) {
 	var query = '\
 		SELECT \
-			P.name as name, P.id as id, P.description as description, IFNULL(avgRating, 0) as rating, U.firstname as firstname, U.lastname as lastname \
+			P.projectUrl as projectUrl, P.name as name, P.id as id, P.description as description, IFNULL(avgRating, 0) as rating, U.firstname as firstname, U.lastname as lastname \
 		FROM \
 			PROJECT P \
 			LEFT OUTER JOIN \

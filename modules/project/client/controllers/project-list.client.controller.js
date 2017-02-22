@@ -19,7 +19,7 @@ angular.module('project').controller('projectListController', ['$scope', '$state
         };
 
         $scope.updateProject = function(project){
-            $state.go('project.update', {projectId: project._id});
+            $state.go('project.update', {projectId: project.id});
         };
 
         $scope.createProject = function(){

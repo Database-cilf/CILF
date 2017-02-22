@@ -4,7 +4,7 @@ angular.module('project').controller('projectCreateController', ['$scope', '$sta
     function ($scope, $stateParams, $state, toastr, projectService) {
         $scope.player = $scope.date = {};
 
-        $scope.createProject = function(player){
+        $scope.createProject = function(project){
             projectService.createProject(project).then(function(){
                 $state.go('project.list');
             });

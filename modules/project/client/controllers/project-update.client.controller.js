@@ -12,7 +12,7 @@ angular.module('project').controller('projectUpdateController', ['$scope', '$sta
 
         $scope.updateProject = function(project){
             projectService.updateProject(project, project).then(function(){
-                $state.go('projects.list');
+                $state.go('project.list');
             });
         };
     }

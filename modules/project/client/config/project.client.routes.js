@@ -38,7 +38,7 @@ angular.module('project').config(['$stateProvider',
             bcInclude: true,
             views: {
                 '@project': {
-                    templateUrl: 'modules/project/project/views/project-create.client.view.html',
+                    templateUrl: 'modules/project/client/views/project-create.client.view.html',
                     controller: 'projectCreateController'
                 },
                 'headerView@project': {
