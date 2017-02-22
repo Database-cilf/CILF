@@ -2,18 +2,17 @@
 
 module.exports = function (app) {
     // User Routes
-    var pokemonPlayers = require('../controllers/pokemon-player.server.controller');
+    var projects = require('../controllers/project.server.controller');
 
-    app.route('/api/pokemon/players').
-        post(pokemonPlayers.create).
-        put(pokemonPlayers.parsePlayersFile).
-        get(pokemonPlayers.list);
+    app.route('/api/projects').
+        post(projects.create).
+        get(projects.list);
 
-    app.route('/api/pokemon/players/:pokeId').
-        get(pokemonPlayers.get).
-        put(pokemonPlayers.update).
-        delete(pokemonPlayers.delete);
+    app.route('/api/projects/:projectId').
+        get(projects.get).
+        put(projects.update).
+        delete(projects.delete);
     
     // Finish by binding the user middleware
-    app.param('pokeId', pokemonPlayers.playerByID);
+    app.param('projectId', projects.projectByID);
 };

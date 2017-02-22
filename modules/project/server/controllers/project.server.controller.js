@@ -5,10 +5,7 @@
  */
 
 var path = require('path'),
-    mongoose = require('mongoose'),
-    Player = mongoose.model('pokemonPlayers'),
     async = require('async'),
-    xml2js = require('xml2js'),
     errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
 	mysql = require('mysql');
 
@@ -91,8 +88,8 @@ exports.update = function (req, res) {
     //For security purposes only merge these parameters
 	var sql='UPDATE PROJECT SET \
 				name = "' + (newProject.name || project.name) + '",\
-				description = "' + (newProject.description || project.description) +'",\
-				projectUrl = "' + (newProject.projectUrl || project.projectUrl) '",\
+				description = "' + (newProject.description || project.description) + '",\
+				projectUrl = "' + (newProject.projectUrl || project.projectUrl) + '",\
 				owner_id = ' + +(newProject.owner_id || project.owner_id) + ' \
 			WHERE id=' + +project.id + ';'
     
