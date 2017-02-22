@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('core').service('logger', ['Utility',
+angular.module('node').service('logger', ['Utility',
     function (Utility) {
         var service = {};
 

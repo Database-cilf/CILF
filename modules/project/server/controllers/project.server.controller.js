@@ -139,18 +139,22 @@ exports.delete = function (req, res) {
  * List of Players
  */
 exports.list = function (req, res) {
-	connection.query('\
-			SELECT \
-				P.name as name, P.id as id, P.description as description, PR.avgRating as rating, U.firstname as firstname, U.lastname as lastname \
-			FROM \
-				PROJECT P, \
-				(SELECT P.name, (SUM(R.rate)/COUNT(R.rate)) as avgRating, P.id as id FROM PROJECT P, RATING R \
-					WHERE P.id = R.proj_id \
-					GROUP BY P.id) PR, \
-				USER U \
-			WHERE \
-				P.id = PR.id AND U.id = P.owner_id', (err, r)=>{
-		r = r.forEach((p)=>{ p.owner={firstName: p.firstname, lastName: p.lastname}; return p});
+	var query = '\
+		SELECT \
+			P.name as name, P.id as id, P.description as description, IFNULL(avgRating, 0) as rating, U.firstname as firstname, U.lastname as lastname \
+		FROM \
+			PROJECT P \
+			LEFT OUTER JOIN \
+			(SELECT P.name, (SUM(R.rate)/COUNT(R.rate)) as avgRating, P.id as id FROM PROJECT P, RATING R \
+				WHERE P.id = R.proj_id \
+				GROUP BY P.id) PR on P.id=PR.id, \
+			USER U \
+		WHERE \
+			U.id = P.owner_id;';
+				
+	connection.query(query, (err, r)=>{
+		r = r.map((p)=>{ p.owner={firstName: p.firstname, lastName: p.lastname}; return p});
+		
         res.json(r);
 	});
 };
@@ -159,17 +163,20 @@ exports.list = function (req, res) {
  * Player middleware
  */
 exports.projectByID = function (req, res, next, id) {
-	connection.query('\
-			SELECT \
-				P.name as name, P.id as id, P.description as description, PR.avgRating as rating, U.firstname as firstname, U.lastname as lastname \
-			FROM \
-				PROJECT P, \
-				(SELECT P.name, (SUM(R.rate)/COUNT(R.rate)) as avgRating, P.id as id FROM PROJECT P, RATING R \
-					WHERE P.id = R.proj_id \
-					GROUP BY P.id) PR, \
-				USER U \
-			WHERE \
-				P.id = PR.id AND U.id = P.owner_id AND P.id=' + +id, (err, r)=>{
+	var query = '\
+		SELECT \
+			P.name as name, P.id as id, P.description as description, IFNULL(avgRating, 0) as rating, U.firstname as firstname, U.lastname as lastname \
+		FROM \
+			PROJECT P \
+			LEFT OUTER JOIN \
+			(SELECT P.name, (SUM(R.rate)/COUNT(R.rate)) as avgRating, P.id as id FROM PROJECT P, RATING R \
+				WHERE P.id = R.proj_id \
+				GROUP BY P.id) PR on P.id=PR.id, \
+			USER U \
+		WHERE \
+			U.id = P.owner_id AND P.id=' + +id;
+			
+	connection.query(query, (err, r)=>{
 					
 		var project = r[0];
 		
