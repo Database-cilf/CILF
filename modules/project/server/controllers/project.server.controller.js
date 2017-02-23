@@ -51,9 +51,11 @@ exports.create = function (req, res) {
     // Init Variables
     var project = req.body;
 
-    var sql = 'INSERT INTO PROJECT (name, description, projectUrl, owner_Id) \
-	VALUES ("' + project.name + '", "' + project.description + '", "' + project.projectUrl + '", ' + +project.owner_Id + ');';
+    var sql = 'INSERT INTO PROJECT (name, description, projectUrl, owner_id) \
+	VALUES ("' + project.name + '", "' + project.description + '", "' + project.projectUrl + '", ' + +project.owner_id + ');';
 
+	console.log(project, sql)
+	
     // Then save the player
     connection.query(sql, function (err, result) {
         if (err) {
@@ -88,16 +90,16 @@ exports.update = function (req, res) {
     var newProject = req.body || {};
 	var queryObj = {};
 	
-	console.log(project, newProject);
-	
     //For security purposes only merge these parameters
 	var sql='UPDATE PROJECT SET \
 				name = "' + (newProject.name || project.name) + '",\
 				description = "' + (newProject.description || project.description) + '",\
-				projectUrl = "' + (newProject.projectUrl || project.projectUrl) + '"\
+				projectUrl = "' + (newProject.projectUrl || project.projectUrl) + '",\
+				owner_id = "' + +(newProject.owner_id || project.owner_id) + '"\
 			WHERE id=' + +project.id + ';'
-    
+	
 	console.log(sql);
+	console.log(+(newProject.owner_id || project.owner_id));
 	
     connection.query(sql, function (err, result) {
         if (err) {
@@ -149,7 +151,7 @@ exports.delete = function (req, res) {
 exports.list = function (req, res) {
 	var query = '\
 		SELECT \
-			P.projectUrl as projectUrl, P.name as name, P.id as id, P.description as description, IFNULL(avgRating, 0) as rating, U.firstname as firstname, U.lastname as lastname \
+			P.projectUrl as projectUrl, P.owner_id as owner_id, P.name as name, P.id as id, P.description as description, IFNULL(avgRating, 0) as rating, U.firstname as firstname, U.lastname as lastname \
 		FROM \
 			PROJECT P \
 			LEFT OUTER JOIN \
@@ -173,7 +175,7 @@ exports.list = function (req, res) {
 exports.projectByID = function (req, res, next, id) {
 	var query = '\
 		SELECT \
-			P.projectUrl as projectUrl, P.name as name, P.id as id, P.description as description, IFNULL(avgRating, 0) as rating, U.firstname as firstname, U.lastname as lastname \
+			P.projectUrl as projectUrl, P.name as name, P.id as id, P.description as description, IFNULL(avgRating, 0) as rating, P.owner_id as owner_id, U.firstname as firstname, U.lastname as lastname \
 		FROM \
 			PROJECT P \
 			LEFT OUTER JOIN \

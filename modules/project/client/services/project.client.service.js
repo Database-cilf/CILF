@@ -8,6 +8,10 @@ angular.module('project').service('projectService', ['Utility',
             return Utility.http.get('projects');
         };
 
+        service.getUsers = function (){
+            return Utility.http.get('users');
+        };
+
         service.createProject = function(project){
             return Utility.http.post('projects', project);
         };

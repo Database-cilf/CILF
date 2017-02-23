@@ -7,7 +7,10 @@ angular.module('project').controller('projectUpdateController', ['$scope', '$sta
         $scope.init = function () {
             projectService.getProject($stateParams.projectId).then(function(project){
                 $scope.project = project;
-            });
+				return projectService.getUsers();
+            }).then(function(users){
+				$scope.users = users
+			});
         };
 
         $scope.updateProject = function(project){
