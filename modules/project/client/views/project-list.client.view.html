@@ -46,6 +46,10 @@
                         <td td-sort ng-sort-by="rating" ng-model="tableSort.sortBy" ng-direction="tableSort.reversOrd">
                             <strong>Rating</strong>
                         </td>
+
+                        <td td-sort ng-sort-by="projectUrl" ng-model="tableSort.sortBy" ng-direction="tableSort.reversOrd">
+                            <strong>Website</strong>
+                        </td>
 						
                         <td>
                             <strong></strong>
@@ -59,6 +63,11 @@
                             <td>{{project.description}}</td>
                             <td>{{project.owner.firstName}}</td>
                             <td>{{project.rating}}</td>
+                            <td>
+								<a href="http://{{project.projectUrl}}">
+									<i class="fa fa-2x fa-home" aria-hidden="true"></i>
+								</a>
+							</td>
 
                             <td class="text-center">
                                 <div class="btn-group" data-ng-class='{open: openConfig}'>

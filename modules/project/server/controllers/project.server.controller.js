@@ -53,8 +53,6 @@ exports.create = function (req, res) {
 
     var sql = 'INSERT INTO PROJECT (name, description, projectUrl, owner_id) \
 	VALUES ("' + project.name + '", "' + project.description + '", "' + project.projectUrl + '", ' + +project.owner_id + ');';
-
-	console.log(project, sql)
 	
     // Then save the player
     connection.query(sql, function (err, result) {
@@ -98,13 +96,8 @@ exports.update = function (req, res) {
 				owner_id = "' + +(newProject.owner_id || project.owner_id) + '"\
 			WHERE id=' + +project.id + ';'
 	
-	console.log(sql);
-	console.log(+(newProject.owner_id || project.owner_id));
-	
     connection.query(sql, function (err, result) {
         if (err) {
-			console.log(err);
-			
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
             });
