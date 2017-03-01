@@ -1,0 +1,85 @@
+#DROP ALL TABLES
+
+DROP TABLE MEMBER;
+DROP TABLE TAGS;
+DROP TABLE RATING;
+DROP TABLE PROJECT;
+DROP TABLE USER;
+
+#CREATE TABLES
+
+CREATE TABLE USER(  
+	id INT NOT NULL AUTO_INCREMENT,
+	firstName CHAR(100) NOT NULL,
+	lastName CHAR(100) NOT NULL,
+	dob DATE NOT NULL,
+	PRIMARY KEY (id)
+) ENGINE=InnoDB;
+
+CREATE TABLE PROJECT(
+    id INT NOT NULL AUTO_INCREMENT,
+    name CHAR(99) NOT NULL,
+    description CHAR(255),
+    projectUrl CHAR(99) NOT NULL,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	owner_id INT NOT NULL,
+    FOREIGN KEY (owner_id) REFERENCES USER(id),
+    PRIMARY KEY (id)
+) ENGINE=InnoDB;
+
+CREATE TABLE RATING(   
+	id INT NOT NULL AUTO_INCREMENT,
+	rate INT CHECK( rate BETWEEN 1 AND 10 ),
+	proj_id INT NOT NULL,
+	user_id INT NOT NULL,
+	description CHAR(255),
+	PRIMARY KEY (id),
+	FOREIGN KEY (user_id) REFERENCES USER(id),
+	FOREIGN KEY (proj_id) REFERENCES PROJECT(id)
+) ENGINE=InnoDB;
+
+CREATE TABLE TAGS(
+	id INT NOT NULL AUTO_INCREMENT,
+	tag CHAR(99),
+	proj_id INT NOT NULL,
+	PRIMARY KEY (id),
+	FOREIGN KEY (proj_id) REFERENCES PROJECT(id)
+) ENGINE=InnoDB;
+
+CREATE TABLE MEMBER(
+	id INT NOT NULL AUTO_INCREMENT,
+	joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	user_id INT NOT NULL,
+	proj_id INT NOT NULL,
+	PRIMARY KEY (id),
+	FOREIGN KEY (user_id) REFERENCES USER(id),
+	FOREIGN KEY (proj_id) REFERENCES PROJECT(id)
+) ENGINE=InnoDB;
+	
+#Insert Users
+INSERT INTO USER ( firstName, lastName, dob)
+VALUES ("Tim", "Loftis", '1997-01-19'),
+	("John", "Bla", '1984-07-03'),
+	("Jim", "Will", '1991-01-03');
+	
+#Insert PROJECT
+INSERT INTO PROJECT ( name, description, projectUrl, owner_Id)
+VALUES ("SUPER COOL PROJECT", "A very cool project", "www.coolstuff.com", 1),
+	("SUPER Boring Project", "A very boring project", "www.lamestuff.com", 2);
+
+#Insert Members
+INSERT INTO MEMBER ( user_id, proj_id)
+	VALUES (1,1),
+	(2,1),
+	(3,2);
+	
+#Insert RATING
+INSERT INTO RATING ( rate, proj_id, description, user_id)
+VALUES (9, 2, "Super boring", 3);
+	
+#Insert TAGS
+INSERT INTO TAGS (tag, proj_id)
+VALUES ("javascript", 1),
+	("PHP", 2),
+	("AWESOME", 1),
+	("Boring", 2);
