@@ -22,6 +22,10 @@ angular.module('project').controller('projectListController', ['$scope', '$state
             $state.go('project.update', {projectId: project.id});
         };
 
+        $scope.reviewProject = function(project){
+            $state.go('project.update.review', {projectId: project.id});
+        };
+
         $scope.viewProject = function(project){
             $state.go('project.update.view', {projectId: project.id});
         };

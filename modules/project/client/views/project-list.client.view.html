@@ -57,9 +57,11 @@
                         <tr ng-class="{'bg-danger': log.level==='error', 'bg-warning': log.level==='warn'}">
                             <td>{{project.name}}</td>
                             <td>{{project.owner.firstName}}</td>
+							
                             <td>
 								<div rating size="5" read-only="true" ng-model="project.rating"></div>
 							</td>
+							
                             <td>
 								<a href="http://{{project.projectUrl}}">
 									<i class="fa fa-2x fa-home" aria-hidden="true"></i>
@@ -83,6 +85,12 @@
 
                                         <li role="separator" class="divider"></li>
 
+                                        <li data-ng-click="reviewProject(project);" class="text-center text-warning p-xxs hover">
+                                            <i class="fa fa-star"></i> Review
+                                        </li>
+
+                                        <li role="separator" class="divider"></li>
+
                                         <li data-ng-click="removeProject(project);" class="text-center text-danger p-xxs hover">
                                             <i class="fa fa-trash-o"></i> Delete
                                         </li>
@@ -96,6 +104,7 @@
                         <td colspan="5">No Projects Are Currently Available to Display</td>
                     </tr>
                 </table>
+				
                 <div class="row">
                     <div class="col-xs-12">
                         Showing {{tableSort.begin + 1}} to {{(tableSort.end < tableSort.total) ? tableSort.end : tableSort.total }} of {{tableSort.total}} entries

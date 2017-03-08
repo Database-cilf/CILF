@@ -91,6 +91,26 @@ angular.module('project').config(['$stateProvider',
                     }
                 }
             }
+        }).
+        state('project.update.review', {
+            url: '/review',
+            bcName: 'Project',
+            bcInclude: true,
+            views: {
+                '@project': {
+                    templateUrl: 'modules/project/client/views/project-create-review.client.view.html',
+                    controller: 'projectReviewController'
+                },
+                'headerView@project': {
+                    controller: function($scope) {
+                        $scope.header = {
+                            label: 'Project',
+                            desc: '',
+                            faIcon: 'fa-users fa-fw'
+                        };
+                    }
+                }
+            }
         });
     }
 ]);

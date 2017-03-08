@@ -33,6 +33,8 @@ exports.create = function (req, res) {
     var sql = 'INSERT INTO RATING (rate, proj_id, description, user_id) \
 	VALUES ("' + review.rate + '", "' + review.proj_id + '", "' + review.description + '", "' + req.user._id + '");';
 	
+	console.log(sql);
+	
     // Then save the player
     connection.query(sql, function (err, result) {
         if (err) {
@@ -125,8 +127,6 @@ exports.list = function (req, res) {
 		FROM \
 			RATING',
 		id = (req.query || {}).projectId;
-
-	console.log(req.query, id);	
 	
 	if(id){
 		query += ' \
