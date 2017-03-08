@@ -17,38 +17,38 @@ angular.module('project').service('projectService', ['Utility',
         };
 
         service.getProject = function(id){
-            id = (id || {})._id || id;
+            var id = (id || {})._id || id;
             return Utility.http.get('projects/' + id);
         };
 
         service.updateProject = function(id, project){
-            id = (id || {}).id || id;
+            var id = (id || {}).id || id;
             return Utility.http.put('projects/' + id, project);
         };
 
         service.removeProject = function(id){
-            id = (id || {})._id || id;
+            var id = (id || {})._id || id;
             return Utility.http.delete('projects/' + id);
         };
 
         service.createReview = function(review){
-            id = (id || {})._id || id;
-            return Utility.http.post('review', review);
+            var id = (id || {})._id || id;
+            return Utility.http.post('reviews', review);
         };
 
         service.updateReview = function(id, review){
-            id = (id || {}).id || id;
-            return Utility.http.put('review/' + id, review);
+            var id = (id || {}).id || id;
+            return Utility.http.put('reviews/' + id, review);
         };
 
         service.removeReview = function(id){
-            id = (id || {})._id || id;
-            return Utility.http.delete('review/' + id);
+            var id = (id || {})._id || id;
+            return Utility.http.delete('reviews/' + id);
         };
 
-        service.getReviews = function(projectId){
-            id = (id || {})._id || id;
-            return Utility.http.get('review', projectId);
+        service.getReviews = function(id){
+            var id = (id || {})._id || id;
+            return Utility.http.get('reviews', {projectId:id});
         };
 
         return service;

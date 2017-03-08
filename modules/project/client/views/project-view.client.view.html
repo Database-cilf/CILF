@@ -1,0 +1,64 @@
+<section class="" >
+    <div class="wrapper wrapper-content animated fadeInRight" data-ng-init="init()">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <pre>{{project.name}}</pre>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Description</label>
+                            <pre>{{project.description}}</pre>
+                        </div>
+						
+                        <div class="form-group">
+                            <label>Project Homepage</label>
+
+							<a href="http://{{project.projectUrl}}">
+								{{project.projectUrl}}
+							</a>
+                        </div>
+						
+                        <div class="form-group">
+                            <label>Project Rating</label>
+							<div rating size="10" read-only="true" ng-model="project.rating"></div>
+                        </div>
+						
+						<div class="form-group">
+							<label for="description">Owner</label>
+                            <pre>{{project.owner.firstName + ' ' + project.owner.lastName}}</pre>
+						</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+		
+		<div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="ibox">
+                    <div class="ibox-content">
+						<label>Reviews</label>
+										
+						<ul class="list-unstyled">
+							<!-- List all messages -->
+							<li class="col-xs-12 col-md-offset-4 col-md-4 chat-message" ng-repeat="review in reviews">
+								<small class="pull-right text-muted" ng-bind="message.created | date:'mediumTime'"></small>
+
+								<div class="pull-left chat-message-details">
+									<strong ng-bind="review.username"></strong>
+									<br>
+									<span ng-bind="review.description"></span>
+									<br>
+									<div rating size="5" read-only="true" ng-model="project.rating"></div>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+    </div>
+</section>
