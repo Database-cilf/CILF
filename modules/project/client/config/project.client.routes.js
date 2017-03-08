@@ -71,6 +71,26 @@ angular.module('project').config(['$stateProvider',
                     }
                 }
             }
+        }).
+        state('project.update.view', {
+            url: '/view',
+            bcName: 'Project',
+            bcInclude: true,
+            views: {
+                '@project': {
+                    templateUrl: 'modules/project/client/views/project-view.client.view.html',
+                    controller: 'projectViewController'
+                },
+                'headerView@project': {
+                    controller: function($scope) {
+                        $scope.header = {
+                            label: 'Project',
+                            desc: '',
+                            faIcon: 'fa-users fa-fw'
+                        };
+                    }
+                }
+            }
         });
     }
 ]);

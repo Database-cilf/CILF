@@ -35,10 +35,6 @@
                             <strong>Name</strong>
                         </td>
 
-                        <td td-sort ng-sort-by="description" ng-model="tableSort.sortBy" ng-direction="tableSort.reversOrd">
-                            <strong>Description</strong>
-                        </td>
-
                         <td td-sort ng-sort-by="owner.firstName" ng-model="tableSort.sortBy" ng-direction="tableSort.reversOrd">
                             <strong>Owner</strong>
                         </td>
@@ -60,9 +56,10 @@
                            data-ng-repeat="project in tableSort.pagedItems | orderBy:tableSort.sortBy:tableSort.reversOrd">
                         <tr ng-class="{'bg-danger': log.level==='error', 'bg-warning': log.level==='warn'}">
                             <td>{{project.name}}</td>
-                            <td>{{project.description}}</td>
                             <td>{{project.owner.firstName}}</td>
-                            <td>{{project.rating}}</td>
+                            <td>
+								<div rating size="5" read-only="true" ng-model="project.rating"></div>
+							</td>
                             <td>
 								<a href="http://{{project.projectUrl}}">
 									<i class="fa fa-2x fa-home" aria-hidden="true"></i>
@@ -79,6 +76,12 @@
                                         </li>
 
                                         <li role="separator" class="divider"></li>
+										
+                                        <li data-ng-click="viewProject(project);" class="text-center text-primary p-xxs hover">
+                                            <i class="fa fa-arrow-circle-o-right"></i> View Project
+                                        </li>
+
+                                        <li role="separator" class="divider"></li>
 
                                         <li data-ng-click="removeProject(project);" class="text-center text-danger p-xxs hover">
                                             <i class="fa fa-trash-o"></i> Delete
@@ -90,7 +93,7 @@
                     </tbody>
 
                     <tr ng-hide="projects.length">
-                        <td colspan="3">No Projects Are Currently Available to Display</td>
+                        <td colspan="5">No Projects Are Currently Available to Display</td>
                     </tr>
                 </table>
                 <div class="row">

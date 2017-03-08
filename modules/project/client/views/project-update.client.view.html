@@ -29,7 +29,7 @@
 							<label for="description">Owner</label>
 
 							<select id="singleSelect" data-ng-model="project.owner_id" class="form-control">
-								<option data-ng-repeat="user in users track by $index" value="{{user.id}}" data-ng-selected="user.id === project.owner_id" required>{{user.firstName + ' ' + user.lastName}}</option>
+								<option data-ng-repeat="user in users track by $index" value="{{user.mongoId}}" data-ng-selected="user.mongoId === project.owner_id" required>{{user.firstName + ' ' + user.lastName}}</option>
 							</select>
 						</div>
 

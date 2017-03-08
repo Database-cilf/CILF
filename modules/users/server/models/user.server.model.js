@@ -6,9 +6,18 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     crypto = require('crypto'),
+	moment = require('moment'),
     validator = require('validator'),
     generatePassword = require('generate-password'),
-    owasp = require('owasp-password-strength-test');
+    owasp = require('owasp-password-strength-test'),
+	mysql = require('mysql');
+	
+var connection  = mysql.createPool({
+	connectionLimit : 10,
+	host: 'localhost',
+	user: 'root',
+	database: 'cilf'
+});
 
 /**
  * A Validation function for local strategy properties
@@ -105,8 +114,30 @@ UserSchema.pre('save', function (next) {
         this.salt = crypto.randomBytes(16).toString('base64');
         this.password = this.hashPassword(this.password);
     }
+	
+	next();
+});
 
-    next();
+UserSchema.post('save', function (next) {
+    var createSql = 'INSERT INTO USER (mongoId, firstName, lastName, created) \
+	VALUES ("'+ this._id +'", "' + this.firstName + '", "' + this.lastName + '", \'' + moment(this.created).format('YYYY-MM-DD') + '\')';
+
+			
+	var sql = '\
+		' + createSql + ' \n\
+		ON DUPLICATE KEY UPDATE mongoId = VALUES(mongoId),\
+								firstName = VALUES(firstName), \
+								lastName = VALUES(lastName), \
+								created = VALUES(created);';
+
+	
+	connection.query(sql, function (err, result) {
+		if (err) {
+			console.log(err);
+		}
+	
+		next();
+	});
 });
 
 /**

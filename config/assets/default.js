@@ -14,6 +14,7 @@ module.exports = {
                 'public/lib/angular/angular.js',
                 'public/lib/moment/moment.js',
                 'public/lib/angular-toastr/dist/angular-toastr.tpls.js',
+                'public/lib/angular-star-rating/angular-star-rating.js',
                 'public/lib/sweetalert/dist/sweetalert.min.js',
                 'public/lib/ng-sweet-alert/ng-sweet-alert.js',
                 'public/lib/angular-resource/angular-resource.js',

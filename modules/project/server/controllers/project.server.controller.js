@@ -35,8 +35,6 @@ var createSql = (queryObj, table, id)=>{
 }
 */
 
-
-
 /**
  * Show the current project
  */
@@ -52,7 +50,7 @@ exports.create = function (req, res) {
     var project = req.body;
 
     var sql = 'INSERT INTO PROJECT (name, description, projectUrl, owner_id) \
-	VALUES ("' + project.name + '", "' + project.description + '", "' + project.projectUrl + '", ' + +project.owner_id + ');';
+	VALUES ("' + project.name + '", "' + project.description + '", "' + project.projectUrl + '", "' + req.user._id + '");';
 	
     // Then save the player
     connection.query(sql, function (err, result) {
@@ -93,8 +91,10 @@ exports.update = function (req, res) {
 				name = "' + (newProject.name || project.name) + '",\
 				description = "' + (newProject.description || project.description) + '",\
 				projectUrl = "' + (newProject.projectUrl || project.projectUrl) + '",\
-				owner_id = "' + +(newProject.owner_id || project.owner_id) + '"\
+				owner_id = "' + (newProject.owner_id || project.owner_id) + '"\
 			WHERE id=' + +project.id + ';'
+	
+	console.log(sql);
 	
     connection.query(sql, function (err, result) {
         if (err) {
@@ -153,7 +153,7 @@ exports.list = function (req, res) {
 				GROUP BY P.id) PR on P.id=PR.id, \
 			USER U \
 		WHERE \
-			U.id = P.owner_id;';
+			U.mongoId = P.owner_id;';
 				
 	connection.query(query, (err, r)=>{
 		r = r.map((p)=>{ p.owner={firstName: p.firstname, lastName: p.lastname}; return p});
@@ -177,7 +177,7 @@ exports.projectByID = function (req, res, next, id) {
 				GROUP BY P.id) PR on P.id=PR.id, \
 			USER U \
 		WHERE \
-			U.id = P.owner_id AND P.id=' + +id;
+			U.mongoId = P.owner_id AND P.id=' + +id;
 			
 	connection.query(query, (err, r)=>{
 					
