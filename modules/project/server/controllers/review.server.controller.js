@@ -31,7 +31,7 @@ exports.create = function (req, res) {
     var review = req.body;
 
     var sql = 'INSERT INTO RATING (rate, proj_id, description, user_id) \
-	VALUES ("' + review.rate + '", "' + review.proj_id + '", "' + review.description + '", "' + req.user._id + '");';
+	VALUES ("' + review.rating + '", "' + review.proj_id + '", "' + review.description + '", "' + req.user._id + '");';
 	
 	console.log(sql);
 	
