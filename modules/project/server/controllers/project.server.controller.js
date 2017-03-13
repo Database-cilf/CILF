@@ -85,6 +85,15 @@ exports.update = function (req, res) {
     var project = req.project;
     var newProject = req.body || {};
 	var queryObj = {};
+		
+	console.log(req.user);
+		
+	//can edit if your an admin or if you are the owner
+	if (((req.user._id+'') !== (project.owner_id+'')) && ((req.user.roles.indexOf('admin') == -1))) {
+		return res.status(400).send({
+			message: 'You are not the owner of this project, update failed'
+		});
+	}
 	
     //For security purposes only merge these parameters
 	var sql='UPDATE PROJECT SET \
@@ -94,7 +103,6 @@ exports.update = function (req, res) {
 				owner_id = "' + (newProject.owner_id || project.owner_id) + '"\
 			WHERE id=' + +project.id + ';'
 	
-	console.log(sql);
 	
     connection.query(sql, function (err, result) {
         if (err) {

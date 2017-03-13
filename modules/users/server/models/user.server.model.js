@@ -136,7 +136,9 @@ UserSchema.post('save', function (next) {
 			console.log(err);
 		}
 	
-		next();
+		if(typeof next == 'function'){ 
+			next(); 
+		}
 	});
 });
 
