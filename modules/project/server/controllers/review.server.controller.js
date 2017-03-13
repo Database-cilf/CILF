@@ -30,7 +30,7 @@ exports.create = function (req, res) {
     // Init Variables
     var review = req.body;
 
-    var sql = 'INSERT INTO RATING (rate, proj_id, description, user_id) \
+    var sql = 'REPLACE INTO RATING (rate, proj_id, description, user_id) \
 	VALUES ("' + review.rating + '", "' + review.proj_id + '", "' + review.description + '", "' + req.user._id + '");';
 	
 	console.log(sql);

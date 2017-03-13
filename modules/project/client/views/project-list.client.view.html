@@ -43,6 +43,10 @@
                             <strong>Rating</strong>
                         </td>
 
+                        <td td-sort ng-sort-by="tags" ng-model="tableSort.sortBy" ng-direction="tableSort.reversOrd">
+                            <strong>Tags</strong>
+                        </td>
+
                         <td td-sort ng-sort-by="projectUrl" ng-model="tableSort.sortBy" ng-direction="tableSort.reversOrd">
                             <strong>Website</strong>
                         </td>
@@ -67,6 +71,8 @@
 									<i class="fa fa-2x fa-home" aria-hidden="true"></i>
 								</a>
 							</td>
+							
+                            <td>{{project.tags || 'No Tags'}}</td>
 
                             <td class="text-center">
                                 <div class="btn-group" data-ng-class='{open: openConfig}'>
@@ -101,7 +107,7 @@
                     </tbody>
 
                     <tr ng-hide="projects.length">
-                        <td colspan="5">No Projects Are Currently Available to Display</td>
+                        <td colspan="6">No Projects Are Currently Available to Display</td>
                     </tr>
                 </table>
 				

@@ -60,6 +60,26 @@ exports.create = function (req, res) {
             });
         }
 		
+		//Add tags
+		if(project.tags){
+			//Remove all spaces in a very ineffecent and unreadable manner because fuck it, why not
+			project.tags = (project.tags+'').split('').filter((c)=>(c!==' ')).join('')
+			
+			var tagSql = 'REPLACE INTO TAGS (tag, proj_id) VALUES ';
+					
+			project.tags.split(',').forEach((tag)=>{
+				tagSql += '("'+ tag +'", '+ result.insertId + '), ';
+			});
+			
+			tagSql = tagSql.substr(0, tagSql.length-2)+';';
+				
+			connection.query(tagSql, function (err, result) {
+				if (err) {
+					console.error(err);
+				}
+			});
+		}
+		
 		connection.query('SELECT * FROM PROJECT WHERE id=' + result.insertId, (err, r)=>{
 			var project = r[0];
 			
@@ -86,12 +106,37 @@ exports.update = function (req, res) {
     var newProject = req.body || {};
 	var queryObj = {};
 		
-	console.log(req.user);
 		
 	//can edit if your an admin or if you are the owner
 	if (((req.user._id+'') !== (project.owner_id+'')) && ((req.user.roles.indexOf('admin') == -1))) {
 		return res.status(400).send({
 			message: 'You are not the owner of this project, update failed'
+		});
+	}
+	
+	//Add/remove tags
+	if(newProject.tags){
+		//Remove all spaces in a very ineffecent and unreadable manner because fuck it, why not
+		newProject.tags = (newProject.tags+'').split('').filter((c)=>(c!==' ')).join('')
+		
+		var tagSql = 'REPLACE INTO TAGS (tag, proj_id) VALUES ';
+				
+		newProject.tags.split(',').forEach((tag)=>{
+			tagSql += '("'+ tag +'", '+ project.id + '), ';
+		});
+		
+		tagSql = tagSql.substr(0, tagSql.length-2)+';';
+		
+		connection.query('DELETE FROM TAGS WHERE proj_id=' + +project.id, (err, r)=>{
+			if (err) {
+				console.error(err);
+			}
+			
+			connection.query(tagSql, function (err, result) {
+				if (err) {
+					console.error(err);
+				}
+			});
 		});
 	}
 	
@@ -134,15 +179,30 @@ exports.update = function (req, res) {
  */
 exports.delete = function (req, res) {
     var project = req.project;
-	
-	connection.query('DELETE FROM PROJECT WHERE id=' + project.id, (err, r)=>{
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        }
 		
-		res.json(project);
+	//can edit if your an admin or if you are the owner
+	if (((req.user._id+'') !== (project.owner_id+'')) && ((req.user.roles.indexOf('admin') == -1))) {
+		return res.status(400).send({
+			message: 'You are not the owner of this project, delete failed'
+		});
+	}
+		
+	connection.query('DELETE FROM TAGS WHERE proj_id=' + +project.id, (err, r)=>{
+		if (err) {
+			console.error(err);
+		}
+		
+		connection.query('DELETE FROM PROJECT WHERE id=' + project.id, (err, r)=>{
+			if (err) {
+				console.error(err);
+			
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			}
+			
+			res.json(project);
+		});
 	});
 };
 
@@ -152,18 +212,26 @@ exports.delete = function (req, res) {
 exports.list = function (req, res) {
 	var query = '\
 		SELECT \
-			P.projectUrl as projectUrl, P.owner_id as owner_id, P.name as name, P.id as id, P.description as description, IFNULL(avgRating, 0) as rating, U.firstname as firstname, U.lastname as lastname \
+			P.projectUrl as projectUrl, P.owner_id as owner_id, P.name as name, P.id as id, P.description as description, IFNULL(avgRating, 0) as rating, U.firstname as firstname, U.lastname as lastname, tags \
 		FROM \
 			PROJECT P \
 			LEFT OUTER JOIN \
-			(SELECT P.name, (SUM(R.rate)/COUNT(R.rate)) as avgRating, P.id as id FROM PROJECT P, RATING R \
-				WHERE P.id = R.proj_id \
-				GROUP BY P.id) PR on P.id=PR.id, \
+			(SELECT P1.name, (SUM(R1.rate)/COUNT(R1.rate)) as avgRating, P1.id as id FROM PROJECT P1, RATING R1 \
+				WHERE P1.id = R1.proj_id \
+				GROUP BY P1.id) PR on P.id=PR.id \
+			LEFT OUTER JOIN \
+			(SELECT P2.name, GROUP_CONCAT(T2.tag SEPARATOR ", ") as tags, T2.proj_id FROM PROJECT P2, TAGS T2 \
+				WHERE P2.id = T2.proj_id \
+				GROUP by T2.proj_id) TR on P.id=TR.proj_id, \
 			USER U \
 		WHERE \
-			U.mongoId = P.owner_id;';
+			U.mongoId = P.owner_id';
 				
 	connection.query(query, (err, r)=>{
+		if(err){
+			console.error(err);
+		}
+		
 		r = r.map((p)=>{ p.owner={firstName: p.firstname, lastName: p.lastname}; return p});
 		
         res.json(r);
@@ -176,13 +244,17 @@ exports.list = function (req, res) {
 exports.projectByID = function (req, res, next, id) {
 	var query = '\
 		SELECT \
-			P.projectUrl as projectUrl, P.name as name, P.id as id, P.description as description, IFNULL(avgRating, 0) as rating, P.owner_id as owner_id, U.firstname as firstname, U.lastname as lastname \
+			P.projectUrl as projectUrl, P.owner_id as owner_id, P.name as name, P.id as id, P.description as description, IFNULL(avgRating, 0) as rating, U.firstname as firstname, U.lastname as lastname, tags \
 		FROM \
 			PROJECT P \
 			LEFT OUTER JOIN \
-			(SELECT P.name, (SUM(R.rate)/COUNT(R.rate)) as avgRating, P.id as id FROM PROJECT P, RATING R \
-				WHERE P.id = R.proj_id \
-				GROUP BY P.id) PR on P.id=PR.id, \
+			(SELECT P1.name, (SUM(R1.rate)/COUNT(R1.rate)) as avgRating, P1.id as id FROM PROJECT P1, RATING R1 \
+				WHERE P1.id = R1.proj_id \
+				GROUP BY P1.id) PR on P.id=PR.id \
+			LEFT OUTER JOIN \
+			(SELECT P2.name, GROUP_CONCAT(T2.tag SEPARATOR ", ") as tags, T2.proj_id FROM PROJECT P2, TAGS T2 \
+				WHERE P2.id = T2.proj_id \
+				GROUP by T2.proj_id) TR on P.id=TR.proj_id, \
 			USER U \
 		WHERE \
 			U.mongoId = P.owner_id AND P.id=' + +id;
