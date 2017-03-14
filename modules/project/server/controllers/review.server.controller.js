@@ -123,15 +123,16 @@ exports.delete = function (req, res) {
 exports.list = function (req, res) {
 	var query = '\
 		SELECT \
-			* \
+			R.rate, U.firstName, U.lastName, R.description \
 		FROM \
-			RATING',
+			RATING R, \
+			USER U \
+		WHERE \
+			U.mongoId = R.user_id',			
 		id = (req.query || {}).projectId;
 	
 	if(id){
-		query += ' \
-			WHERE \
-				proj_id = ' + id;
+		query += ' AND proj_id = ' + id;
 	}
 	
 	connection.query(query, (err, r)=>{

@@ -1,7 +1,9 @@
 'use strict';
 
-angular.module('project').controller('projectListController', ['$scope', '$stateParams', '$state', 'projectService', '$filter',
-    function ($scope, $stateParams, $state, projectService, $filter) {
+angular.module('project').controller('projectListController', ['$scope', '$stateParams', '$state', 'projectService', '$filter', 'Authentication',
+    function ($scope, $stateParams, $state, projectService, $filter, Authentication) {
+		$scope.user = Authentication.user;
+		
         $scope.init = function () {
             projectService.getProjects().then(function(projects){
                 $scope.projects = projects;

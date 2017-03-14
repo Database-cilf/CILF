@@ -26,6 +26,15 @@
                             <label>Project Rating</label>
 							<div rating size="10" read-only="true" ng-model="project.rating"></div>
                         </div>
+
+						<div class="form-group">
+							<label>Tags</label>
+							
+							<div class="well well-sm">
+								<span class="label label-info btn"
+									  data-ng-repeat="tag in project.tags.split(', ') track by $index" style="margin-right: 3px;">{{tag}}</span>
+							</div>
+						</div>
 						
 						<div class="form-group">
 							<label for="description">Owner</label>
@@ -45,14 +54,14 @@
 						<ul class="list-unstyled">
 							<!-- List all messages -->
 							<li class="col-xs-12 col-md-offset-4 col-md-4 chat-message" ng-repeat="review in reviews">
-								<small class="pull-right text-muted" ng-bind="message.created | date:'mediumTime'"></small>
+								<small class="pull-right text-muted" ng-bind="review.created | date:'mediumTime'"></small>
 
 								<div class="pull-left chat-message-details">
-									<strong ng-bind="review.username"></strong>
-									<br>
 									<span ng-bind="review.description"></span>
 									<br>
 									<div rating size="5" read-only="true" ng-model="review.rate"></div>
+									<br>
+									<strong ng-bind="review.firstName + ' ' + review.lastName"></strong>
 								</div>
 							</li>
 						</ul>

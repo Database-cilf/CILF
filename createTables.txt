@@ -36,7 +36,8 @@ CREATE TABLE RATING(
 	description CHAR(255),
 	PRIMARY KEY (id),
 	FOREIGN KEY (user_id) REFERENCES USER(mongoId),
-	FOREIGN KEY (proj_id) REFERENCES PROJECT(id)
+	FOREIGN KEY (proj_id) REFERENCES PROJECT(id),
+	UNIQUE KEY `user_id` (`user_id`,`proj_id`)
 ) ENGINE=InnoDB;
 
 CREATE TABLE TAGS(
@@ -44,7 +45,8 @@ CREATE TABLE TAGS(
 	tag CHAR(99),
 	proj_id INT NOT NULL,
 	PRIMARY KEY (id),
-	FOREIGN KEY (proj_id) REFERENCES PROJECT(id)
+	FOREIGN KEY (proj_id) REFERENCES PROJECT(id),
+	UNIQUE KEY `tag` (`tag`,`proj_id`)
 ) ENGINE=InnoDB;
 
 CREATE TABLE MEMBER(

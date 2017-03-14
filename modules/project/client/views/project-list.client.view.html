@@ -66,24 +66,24 @@
 								<div rating size="5" read-only="true" ng-model="project.rating"></div>
 							</td>
 							
+                            <td>{{project.tags || 'No Tags'}}</td>
+							
                             <td>
 								<a href="http://{{project.projectUrl}}">
 									<i class="fa fa-2x fa-home" aria-hidden="true"></i>
 								</a>
 							</td>
-							
-                            <td>{{project.tags || 'No Tags'}}</td>
 
                             <td class="text-center">
                                 <div class="btn-group" data-ng-class='{open: openConfig}'>
                                     <a class="dropdown-toggle" data-toggle="dropdown" data-ng-click='openConfig =! openConfig'><i class="fa fa-sliders fa-2x"></i></a>
 
                                     <ul class="dropdown-menu left">
-                                        <li data-ng-click="updateProject(project);" class="text-center text-success p-xxs hover">
+                                        <li data-ng-click="updateProject(project);" class="text-center text-success p-xxs hover" data-ng-show="((project.firstname === user.firstName) && (project.lastname === user.lastName)) || (user.roles.indexOf('admin') !== -1)">
                                             <i class="fa fa-arrow-circle-o-left"></i> Edit Project
                                         </li>
 
-                                        <li role="separator" class="divider"></li>
+                                        <li role="separator" class="divider" data-ng-show="((project.firstname === user.firstName) && (project.lastname === user.lastName)) || (user.roles.indexOf('admin') !== -1)"></li>
 										
                                         <li data-ng-click="viewProject(project);" class="text-center text-primary p-xxs hover">
                                             <i class="fa fa-arrow-circle-o-right"></i> View Project
@@ -95,9 +95,9 @@
                                             <i class="fa fa-star"></i> Review
                                         </li>
 
-                                        <li role="separator" class="divider"></li>
+                                        <li role="separator" class="divider" data-ng-show="((project.firstname === user.firstName) && (project.lastname === user.lastName)) || (user.roles.indexOf('admin') !== -1)"></li>
 
-                                        <li data-ng-click="removeProject(project);" class="text-center text-danger p-xxs hover">
+                                        <li data-ng-click="removeProject(project);" class="text-center text-danger p-xxs hover" data-ng-show="((project.firstname === user.firstName) && (project.lastname === user.lastName)) || (user.roles.indexOf('admin') !== -1)">
                                             <i class="fa fa-trash-o"></i> Delete
                                         </li>
                                     </ul>
